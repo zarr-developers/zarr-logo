@@ -42,7 +42,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: logos.zip
-          path: logos.zip
+          path: .
       - run: unzip logos.zip
       - name: Upload website as release asset
         env:
