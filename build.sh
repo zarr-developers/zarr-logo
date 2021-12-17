@@ -16,7 +16,7 @@ convert_each zarr-pink-horizontal
 convert_each zarr-pink-stacked
 
 # And convert the gradient as is
-convert zarr-gradient-2.svg target/pngs/zarr-gradient.png
+convert zarr-gradient.svg target/pngs/zarr-gradient.png
 
 cd target/pngs
 zip -r ../zarr-logos.zip *.png
