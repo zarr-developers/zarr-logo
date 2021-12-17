@@ -12,17 +12,23 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - name: Install ImageMagick
-        run: brew install imagemagick
-      - name: Generate artwork
-        run: ./build.sh
-        env:
-          UID: 1001
+      - run: brew install imagemagick
+      - run: mkdir target
+      - run: convert zarr-gradient.svg target/zarr-gradient.png
+      - env:
+          FILES: zarr-pink-horizontal zarr-pink-stacked
+        run: |
+          for file in $FILES; do
+            convert -background none ${file}.svg target/${file}-transparent.png
+            convert -background white ${file}.svg target/${file}-on-white.png
+            convert -background black ${file}.svg target/${file}-on-black.png
+          done
       - name: Upload artwork as artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ github.event.repository.name }}
-          path: target/
+          path: target/*.png
+
   release:
     if: startsWith(github.ref, 'refs/tags')
     needs: build
@@ -32,23 +38,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ github.event.repository.name }}
-          path: target/
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          path: target/*.png
       - name: Upload website as release asset
-        uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/zarr-logos.zip
-          asset_name: zarr-logos.zip
-          asset_content_type: application/gzip
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          tagname="${GITHUB_REF#refs/tags/}"
+          gh release create "$tagname" target/*.png
