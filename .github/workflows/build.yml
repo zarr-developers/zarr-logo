@@ -19,9 +19,9 @@ jobs:
           FILES: zarr-pink-horizontal zarr-pink-stacked
         run: |
           for file in $FILES; do
-            inkscape --export-background-opactity=0 --export-png=target/${file}-transparent.png ${file}.svg
-            inkscape --export-background="#ffffff"  --export-png=target/${file}-white.png ${file}.svg
-            inkscape --export-background="#000000"  --export-png=target/${file}-black.png ${file}.svg
+            inkscape --export-background-opacity=0 --export-png=target/${file}-transparent.png ${file}.svg
+            inkscape --export-background="#ffffff" --export-png=target/${file}-white.png ${file}.svg
+            inkscape --export-background="#000000" --export-png=target/${file}-black.png ${file}.svg
           done
           zip -r logos.zip target/
       - name: Upload artwork as artifact
