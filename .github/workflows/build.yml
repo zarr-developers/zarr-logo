@@ -14,6 +14,8 @@ jobs:
           submodules: true
       - run: sudo apt-get update -y && sudo apt-get install -y inkscape
       - run: mkdir target
+      - run: inkscape --version
+      - run: inkscape --help
       - run: inkscape --export-type=png --export-filename=target/zarr-gradient.png zarr-gradient.svg
       - env:
           FILES: zarr-pink-horizontal zarr-pink-stacked
