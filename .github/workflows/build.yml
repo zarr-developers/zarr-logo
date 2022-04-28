@@ -7,28 +7,26 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: brew install imagemagick
-      - run: mkdir target
-      - run: convert zarr-gradient.svg target/zarr-gradient.png
+      - run: sudo apt-get update -y && sudo apt-get install -y inkscape
+      - run: inkscape --export-png=zarr-gradient.png zarr-gradient.svg
       - env:
           FILES: zarr-pink-horizontal zarr-pink-stacked
         run: |
           for file in $FILES; do
-            convert -background none ${file}.svg target/${file}-transparent.png
-            convert -background white ${file}.svg target/${file}-on-white.png
-            convert -background black ${file}.svg target/${file}-on-black.png
+            inkscape --export-background-opacity=0 --export-png=${file}-transparent.png ${file}.svg
+            inkscape --export-background="#ffffff" --export-png=${file}-white.png ${file}.svg
+            inkscape --export-background="#000000" --export-png=${file}-black.png ${file}.svg
           done
-          zip -r logos.zip target/
       - name: Upload artwork as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: logos.zip
-          path: logos.zip
+          name: zarr-logo-pngs
+          path: "*.png"
 
   release:
     if: startsWith(github.ref, 'refs/tags')
@@ -41,12 +39,11 @@ jobs:
       - name: Download artwork artifact
         uses: actions/download-artifact@v2
         with:
-          name: logos.zip
+          name: zarr-logo-pngs
           path: .
-      - run: unzip logos.zip
       - name: Upload website as release asset
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           tagname="${GITHUB_REF#refs/tags/}"
-          gh release create "$tagname" target/*.png
+          gh release create "$tagname" *.png
