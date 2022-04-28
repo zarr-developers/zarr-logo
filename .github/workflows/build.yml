@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: brew install imagemagick --with-librsvg librsvg --use-rsvg
+      - run: brew install https://github.com/Homebrew/homebrew-core/raw/46a2ef7c9f0380b8e19f8dfe37270caa27581353/Formula/imagemagick.rb --with-librsvg
       - run: mkdir target
       - run: convert zarr-gradient.svg target/zarr-gradient.png
       - env:
