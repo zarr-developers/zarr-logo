@@ -14,16 +14,14 @@ jobs:
           submodules: true
       - run: sudo apt-get update -y && sudo apt-get install -y inkscape
       - run: mkdir target
-      - run: inkscape --version
-      - run: inkscape --help
-      - run: inkscape --export-type=png --export-filename=target/zarr-gradient.png zarr-gradient.svg
+      - run: inkscape --export-png=target/zarr-gradient.png zarr-gradient.svg
       - env:
           FILES: zarr-pink-horizontal zarr-pink-stacked
         run: |
           for file in $FILES; do
-            inkscape --export-background-opactity=0 --export-type=png --export-filename=target/${file}-transparent.png ${file}.svg
-            inkscape --export-background="#ffffff"  --export-type=png --export-filename=target/${file}-white.png ${file}.svg
-            inkscape --export-background="#000000"  --export-type=png --export-filename=target/${file}-black.png ${file}.svg
+            inkscape --export-background-opactity=0 --export-png=target/${file}-transparent.png ${file}.svg
+            inkscape --export-background="#ffffff"  --export-png=target/${file}-white.png ${file}.svg
+            inkscape --export-background="#000000"  --export-png=target/${file}-black.png ${file}.svg
           done
           zip -r logos.zip target/
       - name: Upload artwork as artifact
