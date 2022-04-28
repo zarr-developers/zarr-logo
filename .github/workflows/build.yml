@@ -7,21 +7,21 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: brew install https://github.com/Homebrew/homebrew-core/raw/46a2ef7c9f0380b8e19f8dfe37270caa27581353/Formula/imagemagick.rb --with-librsvg
+      - run: sudo apt-get update -y && sudo apt-get install -y inkscape
       - run: mkdir target
-      - run: convert zarr-gradient.svg target/zarr-gradient.png
+      - run: inkscape --export-type=png --export-filename=target/zarr-gradient.png zarr-gradient.svg
       - env:
           FILES: zarr-pink-horizontal zarr-pink-stacked
         run: |
           for file in $FILES; do
-            convert -background none ${file}.svg target/${file}-transparent.png
-            convert -background white ${file}.svg target/${file}-on-white.png
-            convert -background black ${file}.svg target/${file}-on-black.png
+            inkscape --export-background-opactity=0 --export-type=png --export-filename=target/${file}-transparent.png ${file}.svg
+            inkscape --export-background="#ffffff"  --export-type=png --export-filename=target/${file}-white.png ${file}.svg
+            inkscape --export-background="#000000"  --export-type=png --export-filename=target/${file}-black.png ${file}.svg
           done
           zip -r logos.zip target/
       - name: Upload artwork as artifact
