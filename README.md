@@ -12,6 +12,11 @@
 This is the color gradient that is used in the logo.
 <img src="zarr-gradient.svg" alt="background gradient for zarr logo" style="width:200px"/>
 
+## PNGs
+
+PNGs are available under the release builds. For the latest versions,
+please see https://github.com/zarr-developers/zarr-logo/releases/latest
+
 ## Uses
 
 Locations that are using these logos:
